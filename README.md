@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
-# Setup Docker Para Projetos Laravel (8, 9, 10 ou 11)
-=======
-# Setup Docker Laravel 10 com PHP 8.1
->>>>>>> e58bdc13a445a9c49644e0a458b62ad9d936e7f9
+# Setup Docker Para Projetos Laravel (10)
 [Assine a Academy, e Seja VIP!](https://academy.especializati.com.br)
 
 ### Passo a passo
