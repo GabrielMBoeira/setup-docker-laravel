@@ -1,10 +1,11 @@
+# Use a imagem base do PHP com PHP 8.3 FPM
 FROM php:8.3-fpm
 
-# set your user name, ex: user=carlos
+# Variáveis de argumento para definir o nome do usuário e ID do usuário
 ARG user=yourusername
 ARG uid=1000
 
-# Install system dependencies
+# Instalação de dependências do sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -14,29 +15,30 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# Clear cache
+# Limpar cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# Instalar extensões do PHP necessárias
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Create system user to run Composer and Artisan Commands
+# Criar usuário do sistema para rodar comandos do Composer e Artisan
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-# Install redis
+# Instalar extensão Redis do PHP
 RUN pecl install -o -f redis \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable redis
 
-# Set working directory
+# Definir diretório de trabalho
 WORKDIR /var/www
 
-# Copy custom configurations PHP
+# Copiar configurações personalizadas do PHP
 COPY docker/php/custom.ini /usr/local/etc/php/conf.d/custom.ini
 
+# Trocar para o usuário criado
 USER $user
